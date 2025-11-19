@@ -1,6 +1,6 @@
 # MTL Translation Tools
 
-A comprehensive translation pipeline for Japanese visual novel/game JSON files using local LLM endpoints (OpenAI-compatible).
+A comprehensive translation pipeline for honse game JSON files using local LLM endpoints (OpenAI-compatible). Meant to be used in conjuction to umamusu-translate (extracting files & hachimi format conversion)
 
 ## Features
 
