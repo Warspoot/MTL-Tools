@@ -1,2 +1,20 @@
+# Directories
 umatl/
 hachimi-tl-en/
+.venv/
+slop/
+raw_umatl/
+New folder/
+
+# Excel exports
+*.xlsx
+~$*.xlsx
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/

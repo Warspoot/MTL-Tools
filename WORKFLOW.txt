@@ -1,0 +1,160 @@
+┌─────────────────────────────────────────────────────────────────┐
+│                  MTL TRANSLATION WORKFLOW                       │
+└─────────────────────────────────────────────────────────────────┘
+
+PHASE 1: TRANSLATION
+═══════════════════════════════════════════════════════════════════
+
+  [raw_umatl/]              [dictionary.json]
+  ├── story/                     │
+  │   ├── 001.json               │
+  │   └── 002.json               │
+  └── event/                     │
+      └── 003.json               │
+           │                     │
+           └─────────┬───────────┘
+                     ↓
+            ┌────────────────────┐
+            │  translate.py      │
+            │  ─────────────     │
+            │  1. Read jpName    │
+            │  2. Read jpText    │
+            │  3. Preprocess     │
+            │  4. Call LLM       │
+            │  5. Write enName   │
+            │  6. Write enText   │
+            └────────────────────┘
+                     ↓
+              [slop/]
+              ├── story/
+              │   ├── 001.json (translated)
+              │   └── 002.json (translated)
+              └── event/
+                  └── 003.json (translated)
+
+
+PHASE 2: QC EXPORT
+═══════════════════════════════════════════════════════════════════
+
+         [slop/]
+         ├── story/
+         │   ├── 001.json
+         │   └── 002.json
+         └── event/
+             └── 003.json
+                  │
+                  ↓
+         ┌──────────────────┐
+         │ export_to_excel  │
+         │ ──────────────── │
+         │ Combines all     │
+         │ JSON files into  │
+         │ Excel sheets     │
+         └──────────────────┘
+                  ↓
+         [translations.xlsx]
+         ┌────────┬────────┬────────┬─────────┬─────────┬────┐
+         │blockIdx│jpName  │enName  │jpText   │enText   │QC  │
+         ├────────┼────────┼────────┼─────────┼─────────┼────┤
+         │ 1      │太郎    │Taro    │こんにち │Hello    │    │
+         │ 2      │花子    │Hanako  │ありがと │Thank you│    │
+         └────────┴────────┴────────┴─────────┴─────────┴────┘
+                                                          ↑
+                                    Edit this column! ───┘
+
+
+PHASE 3: QC IMPORT
+═══════════════════════════════════════════════════════════════════
+
+         [translations.xlsx]
+         ┌────────┬────────┬────────┬─────────┬─────────┬──────────┐
+         │blockIdx│jpName  │enName  │jpText   │enText   │QC        │
+         ├────────┼────────┼────────┼─────────┼─────────┼──────────┤
+         │ 1      │太郎    │Taro    │こんにち │Hello    │Hi there! │
+         │ 2      │花子    │Hanako  │ありがと │Thank you│Thanks!   │
+         └────────┴────────┴────────┴─────────┴─────────┴──────────┘
+                  ↓
+         ┌─────────────────────┐
+         │ import_from_excel   │
+         │ ─────────────────── │
+         │ If QC has value:    │
+         │   enText ← QC       │
+         │ Else:               │
+         │   Keep enText       │
+         └─────────────────────┘
+                  ↓
+              [slop/]
+              ├── story/
+              │   ├── 001.json (QC'd)
+              │   └── 002.json (QC'd)
+              └── event/
+                  └── 003.json (QC'd)
+
+
+FILE STRUCTURE
+═══════════════════════════════════════════════════════════════════
+
+MTL-Tools/
+├── main.py                    ← Run this!
+├── translate.py               ← Translation logic
+├── export_to_excel.py         ← JSON → Excel
+├── import_from_excel.py       ← Excel → JSON
+├── config.json                ← Your settings
+├── dictionary.json            ← Term replacements
+├── requirements.txt           ← Dependencies
+├── README.md                  ← Full documentation
+├── QUICKSTART.md              ← Quick guide
+├── test_setup.py              ← Test your setup
+├── raw_umatl/                 ← Input (your files)
+├── slop/                      ← Output (translated)
+└── translations.xlsx          ← QC spreadsheet
+
+
+COMMANDS
+═══════════════════════════════════════════════════════════════════
+
+Interactive:
+  python main.py
+
+Full workflow:
+  python main.py --workflow
+
+Individual steps:
+  python main.py --translate      # Step 1: Translate
+  python main.py --export         # Step 2: Export to Excel
+  python main.py --import-qc      # Step 3: Import QC
+
+Test setup:
+  python test_setup.py
+
+
+CONFIGURATION KEYS
+═══════════════════════════════════════════════════════════════════
+
+config.json:
+  llm_settings:
+    - api_url          → Your LLM endpoint
+    - api_key          → API key
+    - temperature      → 0.0-1.0 (lower = literal)
+    - system_prompt    → Translation instructions
+
+  translation_settings:
+    - input_folder     → Source JSONs
+    - output_folder    → Translated JSONs
+    - dictionary_file  → Term replacements
+    - batch_size       → API rate limiting
+    - retry_attempts   → Error handling
+
+
+TIPS
+═══════════════════════════════════════════════════════════════════
+
+✓ Test with 1-2 files first
+✓ Add character names to dictionary.json
+✓ Lower temperature for literal translations
+✓ Higher temperature for creative translations
+✓ Check LM Studio console for errors
+✓ Only edit the QC column in Excel
+✓ Don't rename Excel sheets
+✓ Keep folder structure in slop/
+
