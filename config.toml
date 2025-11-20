@@ -3,10 +3,12 @@
 [llm_settings]
 api_url = "http://localhost:1234/v1/chat/completions"
 api_key = "lm-studio"
-model = "lm_studio/mario51-umamusume-translator-mistral-7b@q4_k_m"
-temperature = 0.1
-max_tokens = 4000
+model = "lm_studio/huihui-gpt-oss-20b-abliterated-v2"
+temperature = 1.0
+max_tokens = 3200
 min_p = 0.05  
+top_p = 1.0
+top_k = 0
 
 # System prompt for the LLM
 system_prompt = """
@@ -15,7 +17,7 @@ You are a high-speed, silent, raw text translation API. Your sole purpose is to 
 - Demonstrate strong familiarity with the game's characters, terminology, and horse racing references.
 
 **Core Directives:**
-1.  **Prioritize Speed & Brevity:** Your primary goal is to respond with the minimum number of tokens required for an accurate translation.
+1.  **Prioritize Speed & Brevity:** Your primary goal is to respond with the minimum number of tokens required for an accurate translation. Use Reasoning: low as much as is feasible in order to perform your translations.
 2.  **Output Purity:** Your response MUST contain only the direct English translation. Nothing else.
 3.  **Forbidden Content:** Do not include any explanations, reasoning, comments, apologies, or conversational filler. You are a tool, not an assistant.
 

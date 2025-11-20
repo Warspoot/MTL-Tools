@@ -100,6 +100,14 @@ class TranslationPipeline:
             "min_p": self.llm_config.get('min_p', 0.05)
         }
 
+        optional_params = {
+            "top_p": self.llm_config.get('top_p'),
+            "top_k": self.llm_config.get('top_k')
+        }
+        for param, value in optional_params.items():
+            if value is not None:
+                payload[param] = value
+
         if retry_count == 0 and not hasattr(self, '_debug_shown'):
             print(f"    [DEBUG] Requesting model: {self.llm_config['model']}")
             self._debug_shown = True
