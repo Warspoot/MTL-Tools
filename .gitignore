@@ -10,6 +10,9 @@ New folder/
 *.xlsx
 ~$*.xlsx
 
+# codex session information
+codex.txt
+
 # Python cache
 __pycache__/
 *.pyc
