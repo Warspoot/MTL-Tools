@@ -17,6 +17,8 @@ else:
     except ImportError:
         tomllib = None
 
+from pathlib import Path
+
 
 def test_config():
     """Test if config.toml exists and is valid."""
